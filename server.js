@@ -3,10 +3,13 @@ import mongoose from "mongoose";
 import cors from "cors";
 import confessionRoutes from "./routes/confessionsRoutes.js";
 
+import dotenv from 'dotenv';
+dotenv.config()
+
 const port = process.env.PORT || 8000;
 const connection_url =
-  "mongodb+srv://quovit-admin:quovit@cluster0.zxhlc.mongodb.net/quovitdb?retryWrites=true&w=majority";
-const app = express();
+  `mongodb+srv://quovit-admin:${process.env.MONGO_PWD}@cluster0.zxhlc.mongodb.net/quovitdb?retryWrites=true&w=majority`;
+  const app = express();
 
 app.use(express.json());
 app.use(cors());

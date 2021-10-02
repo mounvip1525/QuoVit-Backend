@@ -1,10 +1,15 @@
 import express from "express";
-import confessionController from "../controllers/confessionController.js";
-
+import {
+    confession_index,
+  confession_create_post,
+  confession_delete,
+} from "../controllers/confessionController.js";
+import * as r from '../controllers/confessionController.js';
 const router = express.Router();
 
-router.get("/", confessionController.confession_index);
-router.post("/add", confessionController.confession_create_post);
-router.delete("/delete/:id", confessionController.confession_delete);
+// console.log(r.confession_index);
+router.get("/", confession_index);
+router.post("/add", confession_create_post);
+router.delete("/delete/:id", confession_delete);
 
 export default router;

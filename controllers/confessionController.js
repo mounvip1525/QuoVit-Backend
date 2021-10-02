@@ -38,7 +38,7 @@ const confession_delete = (req, res) => {
     });
 };
 
-export default {
+export {
   confession_index,
   confession_create_post,
   confession_delete,

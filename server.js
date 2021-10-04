@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import confessionRoutes from "./routes/confessionsRoutes.js";
+import facultyReviewRoutes from './routes/facultyReviewRoutes.js';
 
 import dotenv from 'dotenv';
 dotenv.config()
@@ -23,6 +24,7 @@ mongoose.connect(connection_url, {
   .catch((err) => console.log(err));
 
 app.use("/confessions", confessionRoutes);
+app.use("/facultyReviews",facultyReviewRoutes);
 
 app.get("/", (req, res) => res.status(200).send("OK"));
 

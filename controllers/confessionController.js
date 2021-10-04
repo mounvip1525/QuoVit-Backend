@@ -15,8 +15,6 @@ const confession_index = (req, res) => {
 
 const confession_create_post = (req, res) => {
   const confessionCard = req.body;
-  // console.log(confessionCard)
-
   confessions.create(confessionCard, (err, data) => {
     if (err) {
       res.status(500).send(err);

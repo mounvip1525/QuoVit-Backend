@@ -1,21 +1,21 @@
-import util from "util";
 import multer from "multer";
-const maxSize = 3 * 1024 * 1024;
 
-let storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, __basedir + "/public/uploads");
-  },
-  filename: (req, file, cb) => {
-    console.log(file.originalname);
-    cb(null, file.originalname);
-  },
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/uploads/');
+    },
+    filename: (req, file, cb) => {
+      console.log("-----------------------------------req please---------------",req.originalUrl)
+        cb(null, req.originalUrl.substring(21).replace(/\//g, '-')+ ".pdf");
+    }
 });
+const filefilter = (req, file, cb) => {
+    if (file.mimetype === 'application/pdf'){
+            cb(null, true);
+        }else {
+            cb(null, false);
+        }
+}
 
-let uploadFile = multer({
-  storage: storage,
-  limits: { fileSize: maxSize },
-}).single("file");
-
-let uploadFileMiddleware = util.promisify(uploadFile);
-export {uploadFileMiddleware};
+const upload = multer({storage,filefilter});
+export {upload}

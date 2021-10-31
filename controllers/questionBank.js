@@ -1,57 +1,33 @@
-import {uploadFileMiddleware as uploadFile} from "../middleware/upload.js";
-import fs from "fs";
-const baseUrl = "http://localhost:8080/files/";
 
-const upload = async (req, res) => {
+import questionBank from '../models/questionBank.js';
+
+const paper_index = async (req, res, next) => {
   try {
-    await uploadFile(req, res);
-
-    if (req.file == undefined) {
-      return res.status(400).send({ message: "Please upload a file!" });
-    }
-
-    res.status(200).send({
-      message: "Uploaded the file successfully: " + req.file.originalname,
-    });
-  } catch (err) {
-    console.log(err);
-
-    if (err.code == "LIMIT_FILE_SIZE") {
-      return res.status(500).send({
-        message: "File size cannot be larger than 2MB!",
-      });
-    }
-
-    res.status(500).send({
-      message: `Could not upload the file: ${req.file.originalname}. ${err}`,
-    });
+    const files = await questionBank.find();
+    res.status(200).send(files);
+  } catch (error) {
+    res.status(400).send(error.message);
   }
-};
-
-const getListFiles = (req, res) => {
-  const directoryPath = __basedir + "/public/uploads/";
-
-  fs.readdir(directoryPath, function (err, files) {
-    if (err) {
-      res.status(500).send({
-        message: "Unable to scan files!",
-      });
-    }
-
-    let fileInfos = [];
-
-    files.forEach((file) => {
-      fileInfos.push({
-        name: file,
-        url: baseUrl + file,
-      });
+}
+const paper_upload = async (req, res, next) => {
+  const { courseName, courseCategory, examType, year } = req.params;
+  try {
+    const file = new questionBank({
+      courseName: courseName,
+      courseCategory: courseCategory,
+      questionPapers: {
+        year: year,
+        paper: req.file.path,
+        examType: examType
+      }
     });
-
-    res.status(200).send(fileInfos);
-  });
-};
-
-const download = (req, res) => {
+    await file.save();
+    res.status(201).send('File Uploaded Successfully');
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+}
+const paper_download = (req, res) => {
   const fileName = req.params.name;
   const directoryPath = __basedir + "/public/uploads/";
 
@@ -63,9 +39,6 @@ const download = (req, res) => {
     }
   });
 };
-
 export {
-  upload,
-  getListFiles,
-  download,
-};
+  paper_index, paper_upload, paper_download
+}

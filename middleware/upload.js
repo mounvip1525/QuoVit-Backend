@@ -1,12 +1,12 @@
 import multer from "multer";
+import crypto from "crypto";
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'public/uploads/');
     },
     filename: (req, file, cb) => {
-      console.log("-----------------------------------req please---------------",req.originalUrl)
-        cb(null, req.originalUrl.substring(21).replace(/\//g, '-')+ ".pdf");
+        cb(null,  crypto.randomBytes(16).toString("hex") + ".pdf");
     }
 });
 const filefilter = (req, file, cb) => {

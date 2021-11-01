@@ -9,30 +9,15 @@ const questionBankSchema = new mongoose.Schema({
         type: String,
         // required: true
     },
-    cat1:[{
+    questionPapers:[{
         year:{
             type:String,
             default: new Date().getFullYear()
         },
         paper:{
             type:String
-        }
-    }],
-    cat2:[{
-        year:{
-            type:String,
-            default: new Date().getFullYear()
         },
-        paper:{
-            type:String
-        }
-    }],
-    fat:[{
-        year:{
-            type:String,
-            default: new Date().getFullYear()
-        },
-        paper:{
+        examType:{
             type:String
         }
     }],

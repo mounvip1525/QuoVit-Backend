@@ -1,13 +1,13 @@
 
 import questionBank from '../models/questionBank.js';
 
-const paper_index = async (req, res, next) => {
+const paper_index = async (res) => {
   questionBank
     .find()
     .then((result) => res.status(200).send(result))
     .catch((err) => res.send(500).send(err.message));
 }
-const paper_upload = async (req, res, next) => {
+const paper_upload = async (req, res) => {
   const { courseName, courseCategory, examType, year } = req.params;
   try {
     questionBank.find({ courseName }).then(result => {
@@ -20,11 +20,14 @@ const paper_upload = async (req, res, next) => {
               examType: examType
             }
           }
-        }, (err, data) => {
+        }, (err) => {
           if (err) {
             res.status(500).send(err);
           } else {
-            res.status(201).send(data);
+            questionBank
+            .find()
+            .then((result) => res.status(200).send(result))
+            .catch((err) => res.send(500).send(err.message));
           }
         });
       } else {
@@ -52,9 +55,6 @@ const paper_upload = async (req, res, next) => {
 const paper_download = (req, res) => {
   const { courseName, id } = req.params;
   const directoryPath = __basedir + "/";
-
-  console.log(directoryPath);
-
   questionBank.findOne({ courseName: courseName })
     .then((result => {
       if (result) {
@@ -83,11 +83,22 @@ const courses_index = (req, res) => {
     .catch((err) => res.send(500).send(err));
 }
 const course_papers = (req, res) => {
-  const { courseName } = req.body;
+  const { courseName } = req.params;
+  let categoryArray = {courseName,courseCategory:"",cat1:[],cat2:[],fat:[]}
   questionBank.findOne({ courseName: courseName })
     .then((result => {
       if (result) {
-        res.status(201).send(result)
+        result.questionPapers.map(qp=>{
+          if(qp.examType === "cat1" || qp.examType === "CAT1") {
+            categoryArray.cat1.push(qp)
+          } else if(qp.examType === "cat2" || qp.examType === "CAT2"){
+            categoryArray.cat2.push(qp)
+          } else {
+            categoryArray.fat.push(qp)
+          }
+        })
+        categoryArray.courseCategory = result.courseCategory;
+        res.status(201).send(categoryArray)
       } else {
         res.status(201).send("No results found")
       }

@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import path from 'path';
 import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import confessionRoutes from "./routes/confessionsRoutes.js";
 import facultyReviewRoutes from './routes/facultyReviewRoutes.js';
 import questionBankRoutes from "./routes/questionBankRoutes.js";
@@ -30,6 +31,7 @@ mongoose.connect(connection_url, {
   .catch((err) => console.log(err));
 
 app.use("/auth", authRoutes);
+app.use("/user",userRoutes);
 app.use("/confessions", confessionRoutes);
 app.use("/facultyReviews", facultyReviewRoutes);
 app.use("/questionBank", questionBankRoutes);

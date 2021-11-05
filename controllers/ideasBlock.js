@@ -14,14 +14,13 @@ const ideasBlock_index = (req,res) => {
 }
 
 const ideasBlock_create_idea = (req, res) => {
-    let uName,uTag;
+    let uTag;
     const userId = req.params.id;
     const idea = req.body;
     users.findById(userId).then(result=>{
         try{
-            uName = result.name;
             uTag = `${result.branch} , ${result.campus}`
-            ideasBlock.create({...req.body,creator:{name:uName,tagLine:uTag}}, (err, data) => {
+            ideasBlock.create({...req.body,creator:{ name:result.name,tagLine:uTag,profileImg:result.profileImg,id:result._id}}, (err, data) => {
                 if (err) {
                   res.status(500).send(err);
                 } else {
@@ -46,8 +45,25 @@ const ideasBlock_delete = (req, res) => {
     });
 };
 
+const ideasBlock_update_idea = async (req, res) => {
+    try {
+      const idea = await ideasBlock.findById(req.params.id);
+      console.log(idea,req.body.userId)
+      if (idea.creator.id === req.body.userId) {
+        await idea.updateOne({ $set: req.body });
+        res.status(200).send("the idea has been updated");
+      } else {
+        res.status(403).send("you can update only your idea");
+      }
+    } catch (err) {
+        console.log(err)
+      res.status(500).send(err);
+    }
+  };
+
 export {
   ideasBlock_index,
   ideasBlock_create_idea,
   ideasBlock_delete,
+  ideasBlock_update_idea
 };

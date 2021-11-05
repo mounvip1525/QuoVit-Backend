@@ -3,8 +3,10 @@ import mongoose from "mongoose";
 const ideasBlockSchema = mongoose.Schema(
   {
     creator:{
-        name: String,
-        tagLine: String
+        name:String,
+        tagLine: String,
+        profileImg:String,
+        id:String
     },
     idea:{
         type:String,

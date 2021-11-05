@@ -1,13 +1,13 @@
 import express from "express";
 import {
-  confession_index,
-  confession_create_post,
-  confession_delete,
-} from "../controllers/confessionController.js";
+    ideasBlock_index,
+    ideasBlock_create_idea,
+    ideasBlock_delete,
+} from "../controllers/ideasBlock.js";
 const router = express.Router();
 
-router.get("/", confession_index);
-router.post("/add", confession_create_post);
-router.delete("/delete/:id", confession_delete);
+router.get("/", ideasBlock_index);
+router.post("/:id", ideasBlock_create_idea);
+router.delete("/:id", ideasBlock_delete);
 
 export default router;

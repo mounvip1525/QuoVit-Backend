@@ -8,6 +8,7 @@ import postRoutes from "./routes/postRoutes.js";
 import confessionRoutes from "./routes/confessionsRoutes.js";
 import facultyReviewRoutes from './routes/facultyReviewRoutes.js';
 import questionBankRoutes from "./routes/questionBankRoutes.js";
+import ideasBlockRoutes from "./routes/ideasBlockRoutes.js";
 
 import dotenv from 'dotenv';
 dotenv.config()
@@ -41,6 +42,7 @@ app.use("/posts",postRoutes);
 app.use("/confessions", confessionRoutes);
 app.use("/facultyReviews", facultyReviewRoutes);
 app.use("/questionBank", questionBankRoutes);
+app.use("/ideasBlock",ideasBlockRoutes);
 
 app.get("/", (req, res) => res.status(200).send("OK"));
 

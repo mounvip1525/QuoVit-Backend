@@ -27,7 +27,7 @@ const confession_delete = (req, res) => {
   const id = req.params.id;
   confessions
     .findByIdAndDelete(id)
-    .then((result) => {
+    .then(() => {
       res.status(200).send("Confession deleted successfully");
     })
     .catch((err) => {

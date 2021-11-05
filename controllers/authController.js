@@ -7,6 +7,10 @@ const signup = async (req, res) => {
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
   users.create({...user,password:hashedPassword}, (err, data) => {
     if (err) {
+        // console.log(err)
+        if(err.code === 11000){
+            res.send({message:`${Object.keys(err.keyValue)[0]} already exists`})
+        } else
       res.status(500).send(err);
     } else {
         const { password, updatedAt,createdAt,__v,isAdmin, ...other } = data._doc;
@@ -16,16 +20,24 @@ const signup = async (req, res) => {
 };
 
 const signin = async (req, res) => {
-    const {email} = req.body;
+    const {email,password} = req.body;
+    console.log(req.body)
     try {
       const user = await users.findOne({ email: email });
-      !user && res.status(404).send("User not found");
-      const validPassword = await bcrypt.compare(req.body.password, user.password)
-      !validPassword && res.status(400).json("Wrong password")
-      const { password, updatedAt,createdAt,__v,isAdmin, ...other } = user._doc;
-      res.status(201).send(other);
-    } catch (err) {
-      res.status(500).send(err)
+      if(!user){
+        res.send({message:"User not found"});
+      } else {
+        const validPassword = await bcrypt.compare(password, user.password);
+        if(!validPassword){
+            res.send({message:"Wrong Password"})
+        } else {
+            const { password, updatedAt,createdAt,__v,isAdmin, ...other } = user._doc;
+            res.status(201).send(other);
+        }
+      }
+    } 
+    catch (err) {
+      res.status(500).send(err);
     }
   };
 

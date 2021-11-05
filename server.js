@@ -20,8 +20,12 @@ const connection_url =
   `mongodb+srv://quovit-admin:${process.env.MONGO_PWD}@cluster0.zxhlc.mongodb.net/quovitdb?retryWrites=true&w=majority`;
 const app = express();
 
-app.use(express.json());
+app.use(express.json({  limit: '30mb' }));
 app.use(cors());
+
+// app.options("*", cors({ origin: 'http://localhost:3000', optionsSuccessStatus: 200 }));
+
+// app.use(cors({ origin: "http://localhost:3000", optionsSuccessStatus: 200 }));
 
 mongoose.connect(connection_url, {
   useNewUrlParser: true,

@@ -18,7 +18,7 @@ const ideasBlock_create_idea = (req, res) => {
     const userId = req.params.id;
     users.findById(userId).then(result=>{
         try{
-            uTag = `${result.branch} , ${result.campus}`
+            uTag = `${result.branch} , VIT ${result.campus}`
             ideasBlock.create({...req.body,creator:{ name:result.name,tagLine:uTag,profileImg:result.profileImg,id:result._id}}, (err, data) => {
                 if (err) {
                   res.status(500).send(err);

@@ -1,7 +1,10 @@
 import express from "express";
-import {update_user,delete_user,get_user,follow_user,unfollow_user} from "../controllers/usersController.js"
+import {update_user,delete_user,get_user,follow_user,unfollow_user,users_index} from "../controllers/usersController.js"
 
 const router = express.Router()
+
+//get all users
+router.get("/",users_index)
 
 //update user
 router.put("/:id", update_user);
@@ -14,10 +17,10 @@ router.get("/:id", get_user);
 
 //follow a user
 
-router.put("/:id/follow", follow_user);
+router.put("/follow/:id", follow_user);
 
 //unfollow a user
 
-router.put("/:id/unfollow", unfollow_user);
+router.put("/unfollow/:id", unfollow_user);
 
 export default router;

@@ -2,10 +2,16 @@ import mongoose from "mongoose";
 
 const postSchema = new mongoose.Schema(
   {
-    userId: {
-      type: String,
-      required: true,
+    creator:{
+      name:String,
+      tagLine: String,
+      profileImg:String,
+      id:String
     },
+    // userId: {
+    //   type: String,
+    //   required: true,
+    // },
     caption: {
       type: String,
       required: true,
@@ -20,6 +26,14 @@ const postSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    dislikes: {
+      type: Array,
+      default: [],
+    },
+    isPublic:{
+      type:Boolean,
+      default:true
+    }
     // comments: [{
     //     creator:String,
     //     comment:String

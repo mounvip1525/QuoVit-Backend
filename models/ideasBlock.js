@@ -16,10 +16,7 @@ const ideasBlockSchema = mongoose.Schema(
         type: String,
         required: true
     },
-    link:{
-        type: Array,
-        default: []
-    }
+    link:String,
   },
   { timestamps: true }
 );

@@ -27,10 +27,7 @@ const UserSchema = new mongoose.Schema(
         type: String,
         default: "Vellore"
     },
-    githubUsername:{
-        type: String,
-        unique: true
-    },
+    githubUsername:String,
     password: {
       type: String,
       required: true,
@@ -52,6 +49,10 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    savedPosts:{
+        type:Array,
+        default:[]
+    }
   },
   { timestamps: true }
 );

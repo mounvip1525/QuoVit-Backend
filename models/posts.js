@@ -33,6 +33,10 @@ const postSchema = new mongoose.Schema(
     isPublic:{
       type:Boolean,
       default:true
+    },
+    saved:{
+      type:Boolean,
+      default:false
     }
     // comments: [{
     //     creator:String,

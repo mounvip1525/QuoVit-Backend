@@ -16,7 +16,6 @@ router.delete("/:id", delete_user);
 router.get("/:id", get_user);
 
 //follow a user
-
 router.put("/follow/:id", follow_user);
 
 //unfollow a user

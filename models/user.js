@@ -52,6 +52,26 @@ const UserSchema = new mongoose.Schema(
     savedPosts:{
         type:Array,
         default:[]
+    },
+    workExperience:{
+      type:Array,
+      default:[]
+    },
+    skills:{
+      type:Array,
+      default:[]
+    },
+    projects:{
+      type:Array,
+      default:[]
+    },
+    about:{
+      type:String,
+      default:""
+    },
+    linkedIn:{
+      type:String,
+      default:""
     }
   },
   { timestamps: true }

@@ -3,7 +3,7 @@ import posts from "../models/posts.js";
 
 const get_user_posts = async (userId) => {
     try {
-        let userPosts = [], uniquePostIds = [], uniquePosts = [];
+        let userPosts = [], uniquePostIds = [], uniquePosts = [], savedPosts = [];
         if (userId) {
             const currentUser = await users.findById(userId);
             userPosts = await posts.find({ "creator.id": currentUser._id });
@@ -15,6 +15,11 @@ const get_user_posts = async (userId) => {
             friendPosts.map(fPost => {
                 fPost.length > 0 ? fPost.map(f => userPosts.push(f)) : null
             })
+            savedPosts = await Promise.all(
+                currentUser.savedPosts.map(post => {
+                    return posts.findById(post);
+                })
+            );
         }
         const publicPosts = await posts.find({ isPublic: true })
         userPosts.push(...publicPosts)
@@ -24,7 +29,8 @@ const get_user_posts = async (userId) => {
                 uniquePosts.push(post)
             }
         })
-        return uniquePosts
+        return {uniquePosts,savedPosts}
+
     } catch (err) {
         console.log(err)
     }
@@ -63,10 +69,11 @@ const get_timeline_posts = async (req, res) => {
 //delete a post
 const delete_post = async (req, res) => {
     try {
-        const post = await posts.findById(req.params.id);
-        if (post.creator.id === req.body.userId) {
+        const post = await posts.findById(req.params.postId);
+        if (post.creator.id === req.params.userId) {
             await post.deleteOne();
-            res.status(200).send("the post has been deleted");
+            const pd = await fetch_user_profile(req.params.userId)
+            res.status(200).send(pd)
         } else {
             res.status(403).send("you can delete only your post");
         }
@@ -143,13 +150,8 @@ const toggle_save_post = async (req,res) => {
         !user.savedPosts.includes(req.body.postId) ? 
             await user.updateOne({ $push: { savedPosts : req.body.postId }}) :
             await user.updateOne({ $pull: { savedPosts : req.body.postId }})
-            const uniquePosts = await get_user_posts(req.params.id)
-            const savedPosts = await Promise.all(
-                user.savedPosts.map(post => {
-                    return posts.findById(post);
-                })
-            );
-            res.send({uniquePosts,savedPosts})
+            const posts = await get_user_posts(req.params.id)
+            res.send(posts)
     } catch(err){
         console.log(err)
         res.status(500).send(err)
@@ -170,4 +172,48 @@ const get_saved_posts = async (req,res) => {
     }
 }
 
-export { create_post, update_post, delete_post, get_post, get_timeline_posts, like_post, dislike_post, get_saved_posts , toggle_save_post}
+const fetch_user_profile = async (id) => {
+    try{
+        const currentUser = await users.findById(id);
+        const userPosts = await posts.find({ "creator.id": currentUser._id });
+        const following = await Promise.all( 
+            currentUser.following.map(async (friendId) => {
+                let user = await users.findById({_id:friendId});
+                let tagline = `${user.branch} , VIT ${user.campus}`
+                let { name , profileImg } = user;
+                return {name,profileImg,tagline}
+            }))
+        const followers = await Promise.all( 
+            currentUser.followers.map(async (friendId) => {
+                let user = await users.findById({_id:friendId});
+                let tagline = `${user.branch} , VIT ${user.campus}`
+                let { name , profileImg } = user;
+                return {name,profileImg,tagline}
+            }))
+        return {userPosts,currentUser,followers,following}
+    } catch(err){
+        console.log(err)
+    }
+}
+
+const get_profile_details = async (req,res) => {
+    try{
+        const pd = await fetch_user_profile(req.params.id)
+        res.status(200).send(pd)
+    } catch(err){
+        res.status(500).send(err)
+    }
+}
+
+const update_profile_details = async (req, res) => {
+    try {
+        const user = await users.findById(req.params.id);
+        await user.updateOne({ $set: req.body });
+        const pd = await fetch_user_profile(req.params.id)
+        res.status(200).send(pd);
+    } catch (err) {
+        res.status(500).send(err);
+    }
+};
+
+export { create_post, update_post, delete_post, get_post, get_timeline_posts, like_post, dislike_post, get_saved_posts , toggle_save_post , get_profile_details, update_profile_details }

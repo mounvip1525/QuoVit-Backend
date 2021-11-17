@@ -180,15 +180,16 @@ const fetch_user_profile = async (id) => {
             currentUser.following.map(async (friendId) => {
                 let user = await users.findById({_id:friendId});
                 let tagline = `${user.branch} , VIT ${user.campus}`
-                let { name , profileImg } = user;
-                return {name,profileImg,tagline}
+                let { name , profileImg ,_id} = user;
+                return {name,profileImg,tagline,_id}
             }))
         const followers = await Promise.all( 
             currentUser.followers.map(async (friendId) => {
                 let user = await users.findById({_id:friendId});
                 let tagline = `${user.branch} , VIT ${user.campus}`
-                let { name , profileImg } = user;
-                return {name,profileImg,tagline}
+                console.log(user._id)
+                let { name , profileImg ,_id} = user;
+                return {name,profileImg,tagline,_id}
             }))
         return {userPosts,currentUser,followers,following}
     } catch(err){
@@ -216,4 +217,4 @@ const update_profile_details = async (req, res) => {
     }
 };
 
-export { create_post, update_post, delete_post, get_post, get_timeline_posts, like_post, dislike_post, get_saved_posts , toggle_save_post , get_profile_details, update_profile_details }
+export { create_post, update_post, delete_post, get_post, get_timeline_posts, like_post, dislike_post, get_saved_posts , toggle_save_post , get_profile_details, update_profile_details, fetch_user_profile }

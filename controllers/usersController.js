@@ -1,4 +1,5 @@
 import users from "../models/user.js";
+import { fetch_user_profile } from "./postController.js";
 import bcrypt from "bcrypt";
 
 //follow a user
@@ -7,9 +8,9 @@ const follow_user = async (req, res) => {
     try {
       const user = await users.findById(req.params.id);
       const currentUser = await users.findById(req.body.userId);
-      if (!user.followers.includes(req.body.userId)) {
-        await user.updateOne({ $push: { followers: req.body.userId } });
-        await currentUser.updateOne({ $push: { following: req.params.id } });
+      if (!user.following.includes(req.body.userId)) {
+        await user.updateOne({ $push: { following: req.body.userId } });
+        await currentUser.updateOne({ $push: { followers: req.params.id } });
         res.status(200).send("user has been followed");
       } else {
         res.status(403).send("you already follow this user");
@@ -29,10 +30,12 @@ const unfollow_user = async (req, res) => {
     try {
       const user = await users.findById(req.params.id);
       const currentUser = await users.findById(req.body.userId);
-      if (user.followers.includes(req.body.userId)) {
-        await user.updateOne({ $pull: { followers: req.body.userId } });
-        await currentUser.updateOne({ $pull: { following: req.params.id } });
-        res.status(200).send("user has been unfollowed");
+      if (user.following.includes(req.body.userId)) {
+        await user.updateOne({ $pull: { following: req.body.userId } });
+        await currentUser.updateOne({ $pull: { followers: req.params.id } });
+        const pd = await fetch_user_profile(req.params.id)
+        res.status(200).send(pd)
+        // res.status(200).send("user has been unfollowed");
       } else {
         res.status(403).send("you dont follow this user");
       }
@@ -97,14 +100,33 @@ const delete_user = async (req, res) => {
 
 //get all users 
 const users_index = (req, res) => {
-    users
-      .find()
-      .then((result) => {
-        res.status(200).send(result);
-      })
-      .catch((err) => {
-        res.status(500).send(err);
-      });
-  };
- 
-export { update_user, delete_user, get_user, follow_user, unfollow_user, users_index };
+  users
+    .find()
+    .then((result) => {
+      res.status(200).send(result);
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+};
+
+// get suggested users
+const suggested_users_index = async (req, res) => {
+  try {
+    const user = await users.findById(req.params.id);
+    const following = await Promise.all(
+      user.following.map(async (friendId) => {
+        let user = await users.findById({ _id: friendId });
+        return user._id.toString();
+      }))
+    let all_users = await users.find()
+    let suggestions = all_users.filter(user=>!following.includes(user._id.toString()));
+    let final = suggestions.filter(s=>s._id.toString() !== req.params.id)
+    res.status(200).send(final) 
+  } catch(err){
+    console.log(err)
+    res.status(500).send(err)
+  }
+}
+
+export { update_user, delete_user, get_user, follow_user, unfollow_user, users_index, suggested_users_index };

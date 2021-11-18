@@ -3,7 +3,8 @@ import mongoose from "mongoose"
 const facultyReviewSchema = new mongoose.Schema({
     facultyName:{
         type:String,
-        required: true
+        required: true,
+        unique:true
     },
     facultyCMRating:{
         type:Number,
@@ -15,6 +16,10 @@ const facultyReviewSchema = new mongoose.Schema({
     numOfVotes:{
         type:Number,
         default:0,
+    },
+    voters:{
+        type:Array,
+        default:[]
     }
 })
 export default mongoose.model("facultyReview",facultyReviewSchema)

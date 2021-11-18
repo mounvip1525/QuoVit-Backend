@@ -22,7 +22,6 @@ const ideasBlock_create_idea = (req, res) => {
             ideasBlock.create({...req.body,creator:{ name:result.name,tagLine:uTag,profileImg:result.profileImg,id:result._id}}, (err, data) => {
                 if (err) {
                   res.status(500).send(err);
-
                 } else {
                   res.status(201).send(data);
                 }

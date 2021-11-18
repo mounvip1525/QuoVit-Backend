@@ -22,6 +22,6 @@ router.put("/follow/:id", follow_user);
 router.put("/unfollow/:id", unfollow_user);
 
 //get suggested users
-router.get("/suggested-users/:id",suggested_users_index);
+router.get("/suggestions/:id",suggested_users_index);
 
 export default router;

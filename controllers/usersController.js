@@ -122,6 +122,11 @@ const suggested_users_index = async (req, res) => {
     let all_users = await users.find()
     let suggestions = all_users.filter(user=>!following.includes(user._id.toString()));
     let final = suggestions.filter(s=>s._id.toString() !== req.params.id)
+    final = final.map((user) => {
+          let tagline = `${user.branch} , VIT ${user.campus}`
+          let { name , profileImg ,_id } = user;
+          return {name,profileImg,tagline,_id}
+      })
     res.status(200).send(final) 
   } catch(err){
     console.log(err)

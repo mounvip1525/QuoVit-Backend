@@ -187,7 +187,6 @@ const fetch_user_profile = async (id) => {
             currentUser.followers.map(async (friendId) => {
                 let user = await users.findById({_id:friendId});
                 let tagline = `${user.branch} , VIT ${user.campus}`
-                console.log(user._id)
                 let { name , profileImg ,_id} = user;
                 return {name,profileImg,tagline,_id}
             }))

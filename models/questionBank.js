@@ -3,11 +3,12 @@ import mongoose from "mongoose"
 const questionBankSchema = new mongoose.Schema({
     courseName: {
         type: String,
-        // required: true
+        required: true,
+        // unique:true
     },
     courseCategory: {
         type: String,
-        // required: true
+        required: true
     },
     questionPapers:[{
         year:{

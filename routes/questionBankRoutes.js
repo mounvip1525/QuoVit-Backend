@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get("/", courses_index);
 router.get("/course/:courseName", course_papers);
-router.post("/upload/:courseName/:courseCategory/:examType/:year", upload.single('file'), paper_upload);
+router.post("/:courseName/:courseCategory/:examType/:year", upload.single('file'), paper_upload);
 router.get("/download/:courseName/:id", paper_download);
 router.get("/files", paper_index);
 

@@ -4,7 +4,7 @@ const facultyReviews_index = (req, res) => {
   facultyReviews
     .find()
     .then((result) => res.status(200).send(result))
-    .catch((err) => res.send(500).send(err));
+    .catch((err) => res.send(500).send(err))
 };
 
 const create_faculty = (req, res) => {

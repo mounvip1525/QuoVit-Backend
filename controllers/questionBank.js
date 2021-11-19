@@ -7,6 +7,7 @@ const paper_index = async (res) => {
     .then((result) => res.status(200).send(result))
     .catch((err) => res.send(500).send(err.message));
 }
+
 const paper_upload = async (req, res) => {
   const { courseName, courseCategory, examType, year } = req.params;
   try {
@@ -24,10 +25,7 @@ const paper_upload = async (req, res) => {
           if (err) {
             res.status(500).send(err);
           } else {
-            questionBank
-            .find()
-            .then((result) => res.status(200).send(result))
-            .catch((err) => res.send(500).send(err.message));
+            get_courses().then(courses=>res.status(200).send(courses))
           }
         });
       } else {
@@ -39,11 +37,11 @@ const paper_upload = async (req, res) => {
             paper: req.file.path,
             examType: examType
           }]
-        }, (err, data) => {
+        }, (err) => {
           if (err) {
             res.status(500).send(err);
           } else {
-            res.status(201).send(data);
+            get_courses().then(courses=>res.status(200).send(courses))
           }
         });
       }
@@ -52,6 +50,7 @@ const paper_upload = async (req, res) => {
     res.status(400).send(error.message);
   }
 }
+
 const paper_download = (req, res) => {
   const { courseName, id } = req.params;
   const directoryPath = __basedir + "/";
@@ -69,19 +68,31 @@ const paper_download = (req, res) => {
       }
     })).catch(err => res.status(401).send("No paper found to download"))
 };
-const courses_index = (req, res) => {
-  let coursesArr = [];
-  questionBank
-    .find()
-    .then((result) => {
-      result.forEach(course => {
-        const { courseName, courseCategory } = course;
-        coursesArr.push({ courseName, courseCategory })
-      });
-      res.status(200).send(coursesArr)
-    })
-    .catch((err) => res.send(500).send(err));
+
+const get_courses = async () => {
+  try {
+    let coursesArr = [];
+    let result = await questionBank.find()
+        await result.forEach(course => {
+          const { courseName, courseCategory } = course;
+          coursesArr.push({ courseName, courseCategory })
+        });
+      return coursesArr
+    }
+    catch(err) {
+    console.log(err)
+  }
 }
+
+const courses_index = async (req, res) => {
+      try {
+        let coursesArr = await get_courses();
+      res.status(200).send(coursesArr)
+      } catch(err){
+        res.status(500).send(err)
+      }
+}
+
 const course_papers = (req, res) => {
   const { courseName } = req.params;
   let categoryArray = {courseName,courseCategory:"",cat1:[],cat2:[],fat:[]}
@@ -104,6 +115,7 @@ const course_papers = (req, res) => {
       }
     })).catch(err => res.status(401).send(err.message))
 }
+
 export {
   paper_index, paper_upload, paper_download, courses_index, course_papers
 }

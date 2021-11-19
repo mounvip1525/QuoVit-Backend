@@ -30,7 +30,6 @@ const get_user_posts = async (userId) => {
             }
         })
         return {uniquePosts,savedPosts}
-
     } catch (err) {
         console.log(err)
     }

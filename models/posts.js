@@ -37,11 +37,15 @@ const postSchema = new mongoose.Schema(
     saved:{
       type:Boolean,
       default:false
+    },
+    comments: [
+      {
+        name:String,
+        profileImg:String,
+        id:String,
+        comment: String
     }
-    // comments: [{
-    //     creator:String,
-    //     comment:String
-    // }],
+  ],
     // saved: Boolean,
   },
   { timestamps: true }

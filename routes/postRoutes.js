@@ -1,5 +1,5 @@
 import express from "express";
-import { create_post , update_post , delete_post , get_post , get_timeline_posts , like_post , dislike_post, get_saved_posts, toggle_save_post, get_profile_details, update_profile_details  } from "../controllers/postController.js";
+import { create_post , update_post , delete_post , get_post , get_timeline_posts , like_post , dislike_post, get_saved_posts, toggle_save_post, get_profile_details, update_profile_details, add_comment  } from "../controllers/postController.js";
 
 const router = express.Router();
 
@@ -25,5 +25,7 @@ router.put("/saved/:id",toggle_save_post)
 router.get("/profile/:id",get_profile_details);
 //update profile details
 router.put("/profile/:id",update_profile_details);
+//add comment
+router.put("/comment/:postId/:userId",add_comment)
 
 export default router;

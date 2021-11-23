@@ -215,4 +215,17 @@ const update_profile_details = async (req, res) => {
     }
 };
 
-export { create_post, update_post, delete_post, get_post, get_timeline_posts, like_post, dislike_post, get_saved_posts , toggle_save_post , get_profile_details, update_profile_details, fetch_user_profile }
+const add_comment = async (req,res) => {
+    try {
+        const post = await posts.findById(req.params.postId)
+        const user = await users.findById(req.params.userId)
+        await post.updateOne({ $push: { comments: { name : user.name, profileImg : user.profileImg, id: user.id, comment: req.body.comment } }});
+        const uniquePosts = await get_user_posts(req.params.userId)
+        res.send(uniquePosts)
+    } catch(err) {
+        console.log(err)
+        res.status(500).send(err)
+    }
+}
+
+export { create_post, update_post, delete_post, get_post, get_timeline_posts, like_post, dislike_post, get_saved_posts , toggle_save_post , get_profile_details, update_profile_details, fetch_user_profile, add_comment }

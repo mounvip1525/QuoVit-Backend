@@ -1,10 +1,12 @@
 import express from "express";
-import {update_user,delete_user,get_user,follow_user,unfollow_user,users_index, suggested_users_index} from "../controllers/usersController.js"
+import {update_user,delete_user,get_user,follow_user,unfollow_user,users_index, suggested_users_index, get_mentors} from "../controllers/usersController.js"
 
 const router = express.Router()
 
 //get all users
 router.get("/",users_index)
+
+router.get("/getMentors",get_mentors)
 
 //update user
 router.put("/:id", update_user);

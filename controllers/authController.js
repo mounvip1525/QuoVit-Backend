@@ -7,7 +7,6 @@ const signup = async (req, res) => {
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
   users.create({...user,password:hashedPassword}, (err, data) => {
     if (err) {
-        // console.log(err)
         if(err.code === 11000){
             res.send({message:`${Object.keys(err.keyValue)[0]} already exists`})
         } else

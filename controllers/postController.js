@@ -95,6 +95,7 @@ const like_post = async (req, res) => {
         const uniquePosts = await get_user_posts(req.body.userId)
         res.send(uniquePosts)
     } catch (err) {
+        console.log(err)
         res.status(500).send(err);
     }
 };
@@ -227,5 +228,4 @@ const add_comment = async (req,res) => {
         res.status(500).send(err)
     }
 }
-
 export { create_post, update_post, delete_post, get_post, get_timeline_posts, like_post, dislike_post, get_saved_posts , toggle_save_post , get_profile_details, update_profile_details, fetch_user_profile, add_comment }

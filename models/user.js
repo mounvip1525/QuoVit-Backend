@@ -72,6 +72,10 @@ const UserSchema = new mongoose.Schema(
     linkedIn:{
       type:String,
       default:""
+    },
+    expertise: {
+      type:String,
+      default:null
     }
   },
   { timestamps: true }

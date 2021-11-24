@@ -133,5 +133,22 @@ const suggested_users_index = async (req, res) => {
     res.status(500).send(err)
   }
 }
-
-export { update_user, delete_user, get_user, follow_user, unfollow_user, users_index, suggested_users_index };
+const get_mentors = async (req,res) => {
+  try {
+    let webDev = [] , pythonDev = [] , ml = [] , bct = [] , ds = [];
+    const all_users = await users.find()
+    all_users.map(user=>{
+      user.expertise === "Web Development" ? webDev.push({name:user.name,profileImg:user.profileImg,_id:user._id}) : 
+      user.expertise === "Python Developer" ? pythonDev.push({name:user.name,profileImg:user.profileImg,_id:user._id}) :
+      user.expertise === "Machine Learning" ? ml.push({name:user.name,profileImg:user.profileImg,_id:user._id}) :
+      user.expertise === "Blockchain Dev" ? bct.push({name:user.name,profileImg:user.profileImg,_id:user._id}) :
+      user.expertise === "Data Science" ? ds.push({name:user.name,profileImg:user.profileImg,_id:user._id}) :
+null
+    })
+    res.status(200).send({webDev,pythonDev,ml,bct,ds})
+  } catch(err){
+    console.log(err)
+    res.status(500).send(err)
+  }
+}
+export { update_user, delete_user, get_user, follow_user, unfollow_user, users_index, suggested_users_index, get_mentors };

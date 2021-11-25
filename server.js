@@ -9,6 +9,7 @@ import confessionRoutes from "./routes/confessionsRoutes.js";
 import facultyReviewRoutes from './routes/facultyReviewRoutes.js';
 import questionBankRoutes from "./routes/questionBankRoutes.js";
 import ideasBlockRoutes from "./routes/ideasBlockRoutes.js";
+// import sendMail from './middleware/sendMail.js';
 
 import dotenv from 'dotenv';
 dotenv.config()
@@ -24,16 +25,12 @@ const app = express();
 app.use(express.json({  limit: '30mb' }));
 app.use(cors());
 
-// app.options("*", cors({ origin: 'http://localhost:3000', optionsSuccessStatus: 200 }));
-
-// app.use(cors({ origin: "http://localhost:3000", optionsSuccessStatus: 200 }));
-
 mongoose.connect(connection_url, {
   useNewUrlParser: true,
   // useCreateIndex: true,
   useUnifiedTopology: true,
 })
-  .then((res) => console.log("connected to db"))
+  .then(() => console.log("connected to db"))
   .catch((err) => console.log(err));
 
 app.use("/auth", authRoutes);
@@ -43,6 +40,8 @@ app.use("/confessions", confessionRoutes);
 app.use("/facultyReviews", facultyReviewRoutes);
 app.use("/questionBank", questionBankRoutes);
 app.use("/ideasBlock",ideasBlockRoutes);
+
+// app.get("/sendMail",sendMail)
 
 app.get("/", (req, res) => res.status(200).send("OK"));
 
